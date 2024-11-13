@@ -1,3 +1,4 @@
+from datetime import datetime
 from models import ChatMessage, ChatHistory, LabeledChatHistory
 import dspy
 from lms.together import Together
@@ -31,6 +32,7 @@ while True:
         ChatMessage(
             from_creator=False,
             content=user_input,
+            timestamp=datetime.now(),
         ), )
 
     # Send request to endpoint
@@ -41,6 +43,7 @@ while True:
         ChatMessage(
             from_creator=True,
             content=response,
+            timestamp=datetime.now(),
         ), )
     # Print response
     print()
