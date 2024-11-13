@@ -18,6 +18,8 @@ This chatbot as it stands is pretty basic. For one, we want it to sound more lik
 
     > Ok, so here is the plan: We will load all of the examples but we just want to show the exchange and not the entire example. We want to show the LLM, for a given situation, a couple exhanges of a fan and creator. Ideally using the most relevant ones. That way the llm can stay within the same style.
 
+    > I got this working. Vibe check is ok. Ideally we would want to verify by using a validation set. I am concerned that the KNN optimizer might be matching similarity based on the output response and not the input. Ideally I would like to debug this or as said above validate it but well see....
+
 2. **Incorporate Context Awareness**  
    Introduce context awareness in a way that makes the chatbot more responsive to the timing and circumstances of each interaction. Examples might include awareness of the current time or the duration of a conversation.
 

@@ -1,4 +1,4 @@
-from models import ChatMessage, ChatHistory
+from models import ChatMessage, ChatHistory, LabeledChatHistory
 import dspy
 from lms.together import Together
 
@@ -19,9 +19,9 @@ lm = Together(
 
 dspy.settings.configure(lm=lm)
 
-training_chat_histories = ChatHistory.load_chat_histories()
+training_examples = LabeledChatHistory.load_labeled_histories()
 user_chat_history = ChatHistory()
-chatter = ChatterModule(examples=training_chat_histories)
+chatter = ChatterModule(examples=training_examples)
 while True:
     # Get user input
     user_input = input("You: ")

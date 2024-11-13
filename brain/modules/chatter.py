@@ -1,30 +1,20 @@
 import dspy
-from typing import List, Optional
-
-import os
-from models import ChatHistory
+from typing import List
+from models import ChatHistory, LabeledChatHistory
 from .responder import ResponderModule
-from dspy.teleprompt import KNNFewShot
-from dspy.predict import KNN
-from dspy import Signature, InputField, OutputField
+from .knn_optimizer import KNNOptimizerModule
 
 
 class ChatterModule(dspy.Module):
 
-    def __init__(self, examples: List[ChatHistory]):
+    def __init__(self, examples: List[LabeledChatHistory]):
         super().__init__()
 
-        training_examples = [
-            example for chat_history in examples
-            for example in chat_history.to_dspy_examples()
-        ]
-        self.optimizer = KNNFewShot(k=3,
-                                    trainset=training_examples,
-                                    metric="similarity")
-        self.compiled_responder = self.optimizer.compile(ResponderModule())
+        optimizer = KNNOptimizerModule(examples)
+        self.responder = optimizer.compile_module(ResponderModule())
 
     def forward(
         self,
         chat_history: ChatHistory,
     ):
-        return self.compiled_responder(chat_history=chat_history)
+        return self.responder(chat_history=chat_history)

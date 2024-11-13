@@ -24,7 +24,7 @@ class ChatHistory(BaseModel):
         cls,
         file_path: str = 'training_data/conversations.json'
     ) -> List['ChatHistory']:
-        """Load conversation examples from JSON file and return list of ChatHistory objects."""
+        """Load labeled golden chat histories from JSON file."""
         with open(file_path, 'r') as f:
             conversations = json.load(f)
         return [
@@ -33,40 +33,43 @@ class ChatHistory(BaseModel):
             ]) for conv in conversations
         ]
 
-    def to_dspy_examples(self) -> List[Example]:
-        """Convert this chat history into a list of DSPy Examples.
-        
-        Creates examples where:
-        - input is a fan's message
-        - output is the matching creator's response that follows
-        Each example includes the required _input_keys and _output_keys for DSPy KNN
-        """
-        examples = []
-        for i in range(0,
-                       len(self.messages) - 1,
-                       2):  # Step by 2 since we know fan->creator pattern
-            fan_msg = self.messages[i]
-            creator_msg = self.messages[i + 1]
-
-            example = Example(input=fan_msg.content,
-                              output=creator_msg.content,
-                              _input_keys=["input"],
-                              _output_keys=["output"])
-            examples.append(example)
-
-        return examples
-
     def __str__(self):
         messages = []
-        for i, message in enumerate(self.messages):
-            message_str = str(message)
-            # if i == len(self.messages) - 1 and not message.from_creator:
-            #     message_str = (
-            #         "(The fan just sent the following message which your message must respond to): "
-            #         + message_str
-            #     )
-            messages.append(message_str)
+        for message in self.messages:
+            messages.append(str(message))
         return "\n".join(messages)
 
-    def model_dump_json(self, **kwargs):
-        return str(self)
+
+class LabeledChatHistory(BaseModel):
+    """A chat history with a labeled output response."""
+    chat_history: ChatHistory
+    output: str
+
+    @classmethod
+    def load_labeled_histories(
+        cls,
+        file_path: str = 'training_data/conversations.json'
+    ) -> List['LabeledChatHistory']:
+        """Load conversation examples from JSON file."""
+        with open(file_path, 'r') as f:
+            conversations = json.load(f)
+        return [
+            cls(chat_history=ChatHistory(messages=[
+                ChatMessage(**msg) for msg in conv['chat_history']['messages']
+            ]),
+                output=conv['output']) for conv in conversations
+        ]
+
+    def to_dspy_example(self) -> Example:
+        """Convert this labeled chat history into a DSPy Example.
+        
+        The example will contain:
+        - input: the chat history up to the last fan message
+        - output: the labeled creator response
+        """
+        example = Example()
+        example.input = str(self.chat_history)
+        example.output = self.output
+        example._input_keys = ["input"]
+        example._output_keys = ["output"]
+        return example
