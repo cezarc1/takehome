@@ -46,7 +46,10 @@ class ChatHistory(BaseModel):
             #     )
             time_gap = self.get_time_gap_message(previous_message_timestamp,
                                                  message)
-            messages.append(time_gap + " " + message_str)
+            if time_gap:
+                messages.append(time_gap + ", " + message_str)
+            else:
+                messages.append(message_str)
             previous_message_timestamp = message.timestamp
         return "\n".join(messages)
 
@@ -81,12 +84,12 @@ class ChatHistory(BaseModel):
             return f"[{time_gap.days} days later]\n"
         elif time_gap.seconds > 3600:
             hours = time_gap.seconds // 3600
-            return f"[{hours} hours later]\n"
+            return f"{hours} hours later\n"
         elif time_gap.seconds > 300:  # 5 minutes
             minutes = time_gap.seconds // 60
-            return f"[{minutes} minutes later]\n"
+            return f"{minutes} minutes later\n"
         elif time_gap.seconds > 10:  # 10 seconds
-            return f"[{time_gap.seconds} seconds later]\n"
+            return f"{time_gap.seconds} seconds later\n"
         return "a few seconds later"
 
     def model_dump_json(self, **kwargs):
