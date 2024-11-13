@@ -23,6 +23,8 @@ This chatbot as it stands is pretty basic. For one, we want it to sound more lik
 2. **Incorporate Context Awareness**  
    Introduce context awareness in a way that makes the chatbot more responsive to the timing and circumstances of each interaction. Examples might include awareness of the current time or the duration of a conversation.
 
+    > I added the time gap between live conversations but not between messages for the llm to respond to. There could be other things, that would be relevant, like holidays or things outside of the memory. Or perhaps something specific about the fan (their birthday, etc.)
+
 3. **Topic Filtering**  
    Ensure the chatbot avoids discussing specific topics that may not be suitable. For this exercise, keep responses free of mentions of social media platforms (except OnlyFans) and interactions suggesting in-person meetings with fans.
 
