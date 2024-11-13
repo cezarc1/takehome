@@ -28,7 +28,7 @@ This chatbot as it stands is pretty basic. For one, we want it to sound more lik
 3. **Topic Filtering**  
    Ensure the chatbot avoids discussing specific topics that may not be suitable. For this exercise, keep responses free of mentions of social media platforms (except OnlyFans) and interactions suggesting in-person meetings with fans.
 
-   > Added bare bones filtering. Logic is that we detect if we need to filter and if we do. we return the filtered response, otherwise we return the response as usual. We also get a reason, which ideally we should log.
+   > Added bare bones filtering. Logic is that we detect if we need to filter the response and if we do we return the filtered response, otherwise we return the response as usual. We also get a reasoning back, which ideally we should log. Obviously this is inefficient, especially if we send the filter response to the same model. Ideally we would have a separate, smaller model for detecting if we need to filter.
 
 4. **Further Product Enhancements**  
    Identify and implement an additional enhancement that you believe would improve the product experience.

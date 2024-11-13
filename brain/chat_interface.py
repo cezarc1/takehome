@@ -21,8 +21,8 @@ lm = Together(
 settings.configure(lm=lm)
 
 training_examples = LabeledChatHistory.load_labeled_histories()
-user_chat_history = ChatHistory()
 chatter = ChatterModule(examples=training_examples)
+user_chat_history = ChatHistory()
 while True:
     # Get user input
     user_input = input("You: ")
