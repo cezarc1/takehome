@@ -8,7 +8,7 @@
             "program": "${workspaceFolder}/brain/chat_interface.py",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
-            "justMyCode": true,
+            "justMyCode": false,
             // This launch config expects the .env file to be in the root of the project and where the TOGETHER_API_KEY is set.
             "envFile": "${workspaceFolder}/.env",
             "env": {
