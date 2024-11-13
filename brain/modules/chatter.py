@@ -1,12 +1,14 @@
-import dspy
 from typing import List
+
+from dspy import Module, Prediction
 from models import ChatHistory, LabeledChatHistory
-from .responder import ResponderModule
-from .knn_optimizer import KNNOptimizerModule
+
 from .content_filter import ContentFilterModule
+from .knn_optimizer import KNNOptimizerModule
+from .responder import ResponderModule
 
 
-class ChatterModule(dspy.Module):
+class ChatterModule(Module):
 
     def __init__(self, examples: List[LabeledChatHistory]):
         super().__init__()
@@ -23,5 +25,5 @@ class ChatterModule(dspy.Module):
         filtered = self.content_filter(message=initial_response.output)
         # we only return the filtered message if it's deemed unsafe.
         if not filtered.is_safe:
-            return dspy.Prediction(output=filtered.filtered_message)
+            return Prediction(output=filtered.filtered_message)
         return initial_response

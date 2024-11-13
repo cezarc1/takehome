@@ -2,6 +2,7 @@ import dspy
 
 from models import ChatHistory
 
+
 class Responder(dspy.Signature):
     """
     You are an OnlyFans creator chatting on OnlyFans with a fan.

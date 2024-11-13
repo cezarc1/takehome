@@ -1,8 +1,8 @@
 from datetime import datetime
-from models import ChatMessage, ChatHistory, LabeledChatHistory
-import dspy
-from lms.together import Together
 
+from dspy import settings
+from lms.together import Together
+from models import ChatHistory, ChatMessage, LabeledChatHistory
 from modules.chatter import ChatterModule
 
 lm = Together(
@@ -18,7 +18,7 @@ lm = Together(
     # stop=["\n", "\n\n"],
 )
 
-dspy.settings.configure(lm=lm)
+settings.configure(lm=lm)
 
 training_examples = LabeledChatHistory.load_labeled_histories()
 user_chat_history = ChatHistory()
