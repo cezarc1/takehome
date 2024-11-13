@@ -18,7 +18,7 @@ This chatbot as it stands is pretty basic. For one, we want it to sound more lik
 
     > Ok, so here is the plan: We will load all of the examples but we just want to show the exchange and not the entire example. We want to show the LLM, for a given situation, a couple exhanges of a fan and creator. Ideally using the most relevant ones. That way the llm can stay within the same style.
 
-    > I got this working. Vibe check is ok. Ideally we would want to verify by using a validation set. I am concerned that the KNN optimizer might be matching similarity based on the output response and not the input. Ideally I would like to debug this or as said above validate it but well see....
+    > I got this working. Vibe check is ok. Ideally we would want to verify by using a validation set. I am concerned that the KNN optimizer might be matching similarity based on the output response and not the input. Ideally I would like to debug this or as said above validate it but well see.... I am NOT sure that this is doing it correctly.
 
 2. **Incorporate Context Awareness**  
    Introduce context awareness in a way that makes the chatbot more responsive to the timing and circumstances of each interaction. Examples might include awareness of the current time or the duration of a conversation.
@@ -27,6 +27,8 @@ This chatbot as it stands is pretty basic. For one, we want it to sound more lik
 
 3. **Topic Filtering**  
    Ensure the chatbot avoids discussing specific topics that may not be suitable. For this exercise, keep responses free of mentions of social media platforms (except OnlyFans) and interactions suggesting in-person meetings with fans.
+
+   > Added bare bones filtering. Logic is that we detect if we need to filter and if we do. we return the filtered response, otherwise we return the response as usual. We also get a reason, which ideally we should log.
 
 4. **Further Product Enhancements**  
    Identify and implement an additional enhancement that you believe would improve the product experience.
