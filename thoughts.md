@@ -14,7 +14,7 @@ This chatbot as it stands is pretty basic. For one, we want it to sound more lik
 
     > Embedding Model: regular BERT might not be able to capture style transfer, albeit it might be close enough to start. We could also just start with regular llama, however [it might require a lil more work](https://hamel.dev/blog/posts/llm-judge/#step-5-build-your-llm-as-a-judge-iteratively) than this task requires for this time?  What embeddings should we use?! Is there a bert model that we can fetch so we can classify a little bit better on style?! Aparently StyleBERT is a thing but it doesn't seem to be offered by Together.
 
-    > Confusignly, the [KNNFewShot cheat sheet](https://github.com/stanfordnlp/dspy/blob/6a3c3e7fb96b5a796af38ce2b4736c7b2741bccc/docs/docs/cheatsheet.md?plain=1#L466) doesn't show it taking a embedding model. What?! how is this supposed to work? I guess we will just use the included sentence_transformer stuff...
+    > Confusignly, the [KNNFewShot cheat sheet](https://github.com/stanfordnlp/dspy/blob/6a3c3e7fb96b5a796af38ce2b4736c7b2741bccc/docs/docs/cheatsheet.md?plain=1#L466) doesn't show it taking a embedding model. What?! how is this supposed to work? I guess we will just use the included sentence_transformer stuff... Ahh It just uses all-MiniLM-L6-v2 as the default embedding model.
 
     > Ok, so here is the plan: We will load all of the examples but we just want to show the exchange and not the entire example. We want to show the LLM, for a given situation, a couple exhanges of a fan and creator. Ideally using the most relevant ones. That way the llm can stay within the same style.
 
