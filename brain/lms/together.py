@@ -40,7 +40,11 @@ class Together(HFModel):
         max_time=settings.backoff_time,
         on_backoff=backoff_hdlr,
     )
-    def _generate(self, prompt, use_chat_api=False, **kwargs):
+    def _generate(self,
+                  prompt,
+                  use_chat_api=False,
+                  image_base64=None,
+                  **kwargs):
         kwargs = {**self.kwargs, **kwargs}
         # stop = kwargs.get("stop")
 
@@ -54,12 +58,15 @@ class Together(HFModel):
                 top_k=kwargs.get("top_k"),
                 repetition_penalty=kwargs.get("repetition_penalty"),
                 stop=kwargs.get("stop"),
+                image_base64=kwargs.get("image_base64"),
                 stream=False,
             )
             completions = [response.choices[0].text]
             response = {
                 "prompt": prompt,
-                "choices": [{"text": c} for c in completions],
+                "choices": [{
+                    "text": c
+                } for c in completions],
             }
             return response
 
@@ -68,4 +75,3 @@ class Together(HFModel):
                 print(f"resp_json:{response.json}")
             print(f"Failed to parse JSON response: {e}")
             raise Exception("Received invalid JSON response from server")
-

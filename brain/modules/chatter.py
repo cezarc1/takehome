@@ -1,5 +1,3 @@
-from typing import List
-
 from dspy import Module, Prediction
 from models import ChatHistory, LabeledChatHistory
 

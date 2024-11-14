@@ -12,6 +12,7 @@ class ContentFilterSignature(Signature):
     Rules:
     - No social media mentions (except OnlyFans)
     - No suggestions of in-person meetings
+    - Images or links are ok.
     """
 
     message: str = InputField(

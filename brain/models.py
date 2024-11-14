@@ -1,4 +1,5 @@
 import json
+import logging
 from datetime import datetime
 from typing import List, Optional
 
@@ -9,6 +10,7 @@ from pydantic import BaseModel
 class ChatMessage(BaseModel):
     from_creator: bool
     content: str
+    image_base64: Optional[str] = None  # base64 encoded image
     timestamp: Optional[datetime] = None
 
     def __str__(self):
@@ -107,8 +109,13 @@ class LabeledChatHistory(BaseModel):
         file_path: str = 'training_data/conversations.json'
     ) -> List['LabeledChatHistory']:
         """Load conversation examples from JSON file."""
-        with open(file_path, 'r') as f:
-            conversations = json.load(f)
+        logging.info(f"Loading labeled chat histories from {file_path}")
+        try:
+            with open(file_path, 'r') as f:
+                conversations = json.load(f)
+        except FileNotFoundError:
+            logging.error(f"File {file_path} not found")
+            raise
         return [
             cls(chat_history=ChatHistory(messages=[
                 ChatMessage(**msg) for msg in conv['chat_history']['messages']
