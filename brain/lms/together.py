@@ -1,37 +1,39 @@
-from dsp.modules.hf import HFModel
+import logging
 import os
-import requests
+
 import backoff
+import requests
+from dsp.modules.hf import HFModel
 from dsp.utils.settings import settings
+from together import Together as TogetherClient
 
-from together import Together
+ERRORS = (Exception, requests.RequestException)
 
-client = Together()
-
-ERRORS = Exception
+logger = logging.getLogger(__name__)
 
 
 def backoff_hdlr(details):
     """Handler from https://pypi.org/project/backoff/"""
-    print(
+    logger.warning(
         "Backing off {wait:0.1f} seconds after {tries} tries "
         "calling function {target} with kwargs "
-        "{kwargs}".format(**details),
-    )
+        "{kwargs}".format(**details), )
 
 
 class Together(HFModel):
+
     def __init__(
         self,
         model,
         api_base="",
-        api_key="",
+        api_key=os.environ["TOGETHER_API_KEY"],
         **kwargs,
     ):
         super().__init__(model=model, is_client=True)
         self.session = requests.Session()
         self.model = model
-
+        assert api_key, "Together API key is required"
+        self.client = TogetherClient(api_key=api_key)
         self.kwargs = {**kwargs}
 
     @backoff.on_exception(
@@ -47,9 +49,9 @@ class Together(HFModel):
                   **kwargs):
         kwargs = {**self.kwargs, **kwargs}
         # stop = kwargs.get("stop")
-
+        logger.debug(f"Calling Together with prompt: {prompt}")
         try:
-            response = client.completions.create(
+            response = self.client.completions.create(
                 prompt=prompt,
                 model=self.model,
                 max_tokens=kwargs.get("max_tokens"),
@@ -61,6 +63,7 @@ class Together(HFModel):
                 image_base64=kwargs.get("image_base64"),
                 stream=False,
             )
+            logger.debug(f"Response: {response}")
             completions = [response.choices[0].text]
             response = {
                 "prompt": prompt,
@@ -69,9 +72,6 @@ class Together(HFModel):
                 } for c in completions],
             }
             return response
-
         except Exception as e:
-            if response:
-                print(f"resp_json:{response.json}")
-            print(f"Failed to parse JSON response: {e}")
+            logging.error(f"Failed to parse JSON response: {e}")
             raise Exception("Received invalid JSON response from server")

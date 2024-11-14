@@ -3,6 +3,7 @@ import logging
 from datetime import datetime
 from typing import List, Optional
 
+from dsp import Example as DSPExample
 from dspy import Example
 from pydantic import BaseModel
 
@@ -108,10 +109,27 @@ class LabeledChatHistory(BaseModel):
         """Convert this labeled chat history into a DSPy Example.
         
         The example will contain:
-        - chat_history: the chat history as a structured object
+        - chat_history: the ChatHistory as a pydantic object as the input
         - response: the labeled creator response
         """
         return Example(
             chat_history=self.chat_history,
             response=self.response,
         ).with_inputs("chat_history")
+
+    def to_dsp_example(self) -> DSPExample:
+        """Convert this labeled chat history into a DSP Example.
+        
+        The example will contain:
+        - chat_history: the ChatHistory as a pydantic object as the input
+        - response: the labeled creator response
+        """
+        return DSPExample({
+            "_input_keys": ["chat_history"],
+            "inputs": {
+                "chat_history": self.chat_history,
+            },
+            "labels": {
+                "response": self.response
+            },
+        })

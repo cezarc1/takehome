@@ -1,3 +1,5 @@
+from typing import Optional
+
 from dspy import Module, Prediction
 from models import ChatHistory, LabeledChatHistory
 
@@ -8,18 +10,25 @@ from .responder import ResponderModule
 
 class ChatterModule(Module):
 
-    def __init__(self, examples: list[LabeledChatHistory]):
+    def __init__(self,
+                 examples: list[LabeledChatHistory],
+                 use_filter: bool = True):
         super().__init__()
-        optimizer = KNNOptimizer(examples)
-        self.responder = optimizer.compile_module(ResponderModule())
-        self.content_filter = ContentFilterModule()
+        self.optimizer = KNNOptimizer(examples)
+        self.responder = self.optimizer.compile_module(ResponderModule())
+        if use_filter:
+            self.content_filter = ContentFilterModule()
 
     def forward(
         self,
         chat_history: ChatHistory,
     ):
         initial_response = self.responder(chat_history=chat_history)
-        filtered = self.content_filter(message=initial_response.response)
-        if not filtered.is_safe:
-            return Prediction(response=filtered.filtered_message)
+        if self.content_filter:
+            filtered = self.content_filter(message=initial_response.response)
+            if not filtered.is_safe:
+                return Prediction(response=filtered.filtered_message)
         return initial_response
+
+    def evaluate(self):
+        return self.optimizer.evaluate(self.responder)

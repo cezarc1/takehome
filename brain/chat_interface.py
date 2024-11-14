@@ -1,4 +1,5 @@
 import logging
+import os
 from datetime import datetime
 
 from dspy import settings
@@ -8,9 +9,11 @@ from models import ChatHistory, ChatMessage, LabeledChatHistory
 from modules.chatter import ChatterModule
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 lm = Together(
     model="meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo",
+    api_key=os.environ["TOGETHER_API_KEY"],
     temperature=0.5,
     max_tokens=1000,
     top_p=0.7,
@@ -25,7 +28,10 @@ lm = Together(
 settings.configure(lm=lm)
 
 training_examples = LabeledChatHistory.load_labeled_histories()
+logger.info(f"Loaded {len(training_examples)} training examples")
+logger.info("Loading ChatterModule...")
 chatter = ChatterModule(examples=training_examples)
+logger.info("ChatterModule loaded")
 user_chat_history = ChatHistory()
 while True:
     # Get user input
@@ -57,11 +63,11 @@ while True:
         ), )
     # Print response
     print()
+    print("Response:", response)
     # print("<Debug>")
+    # print("Evaluation:", chatter.evaluate())
     # print(
     #     "Prompt:", lm.inspect_history(n=2)
     # )  # we send two messages at a time (1 for the response and another for the content filter)
     # print("</Debug>")
-    print("Response:", response)
-
     print()
