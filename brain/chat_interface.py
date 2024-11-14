@@ -63,11 +63,12 @@ while True:
         ), )
     # Print response
     print()
-    print("Response:", response)
+    print("Creator: ", response)
     # print("<Debug>")
     # print("Evaluation:", chatter.evaluate())
     # print(
     #     "Prompt:", lm.inspect_history(n=2)
-    # )  # we send two messages at a time (1 for the response and another for the content filter)
+    # )  # outside the optimizer we send two messages at a time (1 for the
+    # response and another for the content filter)
     # print("</Debug>")
     print()
