@@ -22,30 +22,11 @@ class ChatMessage(BaseModel):
 class ChatHistory(BaseModel):
     messages: List[ChatMessage] = []
 
-    @classmethod
-    def load_chat_histories(
-        cls,
-        file_path: str = 'training_data/conversations.json'
-    ) -> List['ChatHistory']:
-        """Load labeled golden chat histories from JSON file."""
-        with open(file_path, 'r') as f:
-            conversations = json.load(f)
-        return [
-            cls(messages=[
-                ChatMessage(**msg) for msg in conv['chat_history']['messages']
-            ]) for conv in conversations
-        ]
-
     def __str__(self):
         messages = []
         previous_message_timestamp: Optional[datetime] = None
         for message in self.messages:
             message_str = str(message)
-            # if i == len(self.messages) - 1 and not message.from_creator:
-            #     message_str = (
-            #         "(The fan just sent the following message which your message must respond to): "
-            #         + message_str
-            #     )
             time_gap = self.get_time_gap_message(previous_message_timestamp,
                                                  message)
             if time_gap:
@@ -127,8 +108,8 @@ class LabeledChatHistory(BaseModel):
         """Convert this labeled chat history into a DSPy Example.
         
         The example will contain:
-        - input: the chat history as a structured object
-        - output: the labeled creator response
+        - chat_history: the chat history as a structured object
+        - response: the labeled creator response
         """
         return Example(
             chat_history=self.chat_history,
