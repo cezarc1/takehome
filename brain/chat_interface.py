@@ -48,7 +48,9 @@ while True:
     # Print response
     print()
     print("<Debug>")
-    print("Prompt:", lm.inspect_history(n=1))
+    print(
+        "Prompt:", lm.inspect_history(n=2)
+    )  # we send two messages at a time (1 for the response and another for the content filter)
     print("</Debug>")
     print("Response:", response)
 

@@ -48,7 +48,7 @@ class ChatHistory(BaseModel):
             time_gap = self.get_time_gap_message(previous_message_timestamp,
                                                  message)
             if time_gap:
-                messages.append(time_gap + ", " + message_str)
+                messages.append(time_gap + ":" + message_str)
             else:
                 messages.append(message_str)
             previous_message_timestamp = message.timestamp
@@ -63,9 +63,9 @@ class ChatHistory(BaseModel):
         time_gap = self._format_time_gap(previous_message_timestamp,
                                          current_message.timestamp)
         if current_message.from_creator:
-            message = f"sent by YOU at {time_gap}"
+            message = f"sent by YOU {time_gap}"
         else:
-            message = f"sent by FAN at {time_gap}"
+            message = f"sent by FAN {time_gap}"
         return message
 
     def _format_time_gap(self, prev_time: datetime,
