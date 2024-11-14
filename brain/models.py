@@ -4,6 +4,7 @@ from typing import List, Optional
 
 from dsp.primitives import Example
 from pydantic import BaseModel
+from dspy import Example
 
 
 class ChatMessage(BaseModel):
@@ -99,7 +100,7 @@ class ChatHistory(BaseModel):
 class LabeledChatHistory(BaseModel):
     """A chat history with a labeled output response."""
     chat_history: ChatHistory
-    output: str
+    response: str
 
     @classmethod
     def load_labeled_histories(
@@ -113,19 +114,17 @@ class LabeledChatHistory(BaseModel):
             cls(chat_history=ChatHistory(messages=[
                 ChatMessage(**msg) for msg in conv['chat_history']['messages']
             ]),
-                output=conv['output']) for conv in conversations
+                response=conv['output']) for conv in conversations
         ]
 
     def to_dspy_example(self) -> Example:
         """Convert this labeled chat history into a DSPy Example.
         
         The example will contain:
-        - input: the chat history up to the last fan message
+        - input: the chat history as a structured object
         - output: the labeled creator response
         """
-        example = Example()
-        example.input = str(self.chat_history)
-        example.output = self.output
-        example._input_keys = ["input"]
-        example._output_keys = ["output"]
-        return example
+        return Example(
+            chat_history=self.chat_history,
+            output=self.response,
+        ).with_inputs("chat_history")

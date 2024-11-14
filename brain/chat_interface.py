@@ -36,7 +36,7 @@ while True:
         ), )
 
     # Send request to endpoint
-    response = chatter(chat_history=user_chat_history).output
+    response = chatter(chat_history=user_chat_history).response
 
     # Append response to chat history
     user_chat_history.messages.append(
