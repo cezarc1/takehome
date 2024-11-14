@@ -32,3 +32,13 @@ This chatbot as it stands is pretty basic. For one, we want it to sound more lik
 
 4. **Further Product Enhancements**  
    Identify and implement an additional enhancement that you believe would improve the product experience.
+
+   > ***Initial thoughts:***
+   > 1. Personalization: Would be nice to have the creator be able to remember things about the fan. Preferences, birthdays, things like that. This could also blow up in our face if we are too personal. Initial thoughts are to use a KG to store and retrieve this information. We could use a simple Signature for extracting out useful information to remember. The signature is simple but integrating a KG is somehow bound to be a headache to integrate with dspy? Took a look at the retrieval modules and there is a [neo4j](https://github.com/stanfordnlp/dspy/blob/main/dspy/retrieve/neo4j_rm.py) one....
+
+   > 2. Async messaging: Would be nice to have the ability to send messages asynchronously. For example, if the fan has not messaged for a while, the creator could send a message reminding them of something? promo?! something personal? 
+   
+   > 3. Per, creator personalization. Unsure if this is the whole point of the chatbot. i.e. for each creator we have our own training data.
+
+   > 4. Use a vector store for the KNN stuff. Wasted work otherwise.
+   > 5. More training data. Maybe we can synthetically generate some?
