@@ -2,9 +2,8 @@ import json
 from datetime import datetime
 from typing import List, Optional
 
-from dsp.primitives import Example
-from pydantic import BaseModel
 from dspy import Example
+from pydantic import BaseModel
 
 
 class ChatMessage(BaseModel):

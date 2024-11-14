@@ -10,7 +10,7 @@ from .responder import ResponderModule
 
 class ChatterModule(Module):
 
-    def __init__(self, examples: List[LabeledChatHistory]):
+    def __init__(self, examples: list[LabeledChatHistory]):
         super().__init__()
 
         optimizer = KNNOptimizerModule(examples)
