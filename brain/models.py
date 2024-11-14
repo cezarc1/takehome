@@ -132,5 +132,5 @@ class LabeledChatHistory(BaseModel):
         """
         return Example(
             chat_history=self.chat_history,
-            output=self.response,
+            response=self.response,
         ).with_inputs("chat_history")
