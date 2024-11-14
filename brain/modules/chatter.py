@@ -2,7 +2,7 @@ from dspy import Module, Prediction
 from models import ChatHistory, LabeledChatHistory
 
 from .content_filter import ContentFilterModule
-from .knn_optimizer import KNNOptimizerModule
+from .knn_optimizer import KNNOptimizer
 from .responder import ResponderModule
 
 
@@ -10,8 +10,7 @@ class ChatterModule(Module):
 
     def __init__(self, examples: list[LabeledChatHistory]):
         super().__init__()
-
-        optimizer = KNNOptimizerModule(examples)
+        optimizer = KNNOptimizer(examples)
         self.responder = optimizer.compile_module(ResponderModule())
         self.content_filter = ContentFilterModule()
 

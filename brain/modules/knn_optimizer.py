@@ -5,7 +5,7 @@ from dspy.teleprompt import KNNFewShot
 from models import LabeledChatHistory
 
 
-class KNNOptimizerModule():
+class KNNOptimizer():
 
     def __init__(self, examples: list[LabeledChatHistory], k: int = 3):
         super().__init__()
