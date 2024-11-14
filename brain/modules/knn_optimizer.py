@@ -1,4 +1,4 @@
-from typing import List
+import logging
 
 from dspy import Module
 from dspy.teleprompt import KNNFewShot
@@ -20,4 +20,7 @@ class KNNOptimizerModule(Module):
         )
 
     def compile_module(self, module: Module) -> Module:
+        logging.info(
+            f"Compiling KNN module with {len(self.training_examples)} examples"
+        )
         return self.optimizer.compile(module, trainset=self.training_examples)

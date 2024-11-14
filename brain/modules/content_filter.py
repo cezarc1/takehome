@@ -8,7 +8,8 @@ class ContentFilterModule(Module):
         super().__init__()
         # Use a TypedPredictor because the regular predictor doesn't actually work
         # regardless of the warnings.
-        self.prog = TypedPredictor(ContentFilterSignature, explain_errors=True)
+        self.prog = TypedPredictor(ContentFilterSignature,
+                                   explain_errors=False)
 
     def forward(self, message: str):
         """
