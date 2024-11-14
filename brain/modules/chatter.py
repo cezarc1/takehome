@@ -23,7 +23,6 @@ class ChatterModule(Module):
     ):
         initial_response = self.responder(chat_history=chat_history)
         filtered = self.content_filter(message=initial_response.response)
-        # we only return the filtered message if it's deemed unsafe.
         if not filtered.is_safe:
-            return Prediction(output=filtered.filtered_message)
+            return Prediction(response=filtered.filtered_message)
         return initial_response

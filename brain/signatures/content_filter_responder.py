@@ -1,4 +1,4 @@
-from dspy import Signature, InputField, OutputField
+from dspy import InputField, OutputField, Signature
 
 
 class ContentFilterSignature(Signature):
@@ -16,7 +16,11 @@ class ContentFilterSignature(Signature):
 
     message: str = InputField(
         desc="Message to check for inappropriate content")
-    is_safe: bool = OutputField(desc="Whether the message is safe to send")
-    reasoning: str = OutputField(desc="Reasoning behind the decision")
+    is_safe: bool = OutputField(
+        desc="Whether the message is safe to send (True/False). Only "
+        "respond with False if the message is not safe or True if it is. "
+        "Do not respond with any")
+    reasoning: str = OutputField(
+        desc="Explanation of why the message was flagged or approved")
     filtered_message: str = OutputField(
         desc="Modified message if needed, or original if safe")
