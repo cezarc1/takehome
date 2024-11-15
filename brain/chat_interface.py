@@ -8,12 +8,21 @@ from lms.together import Together
 from models import ChatHistory, ChatMessage, LabeledChatHistory
 from modules.chatter import ChatterModule
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=getattr(logging, os.getenv('LOG_LEVEL', 'INFO')))
 logger = logging.getLogger(__name__)
+
+together_api_key = os.environ.get("TOGETHER_API_KEY")
+if not together_api_key:
+    raise ValueError(
+        "TOGETHER_API_KEY environment variable is not set. Create a .env file in the root project with the key"
+    )
+EVAL_MODE = os.environ.get("EVAL_MODE") == "true"
+
+print("Loading model...")
 
 lm = Together(
     model="meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo",
-    api_key=os.environ["TOGETHER_API_KEY"],
+    api_key=together_api_key,
     temperature=0.5,
     max_tokens=1000,
     top_p=0.7,
@@ -32,9 +41,9 @@ logger.info(f"Loaded {len(training_examples)} training examples")
 logger.info("Loading ChatterModule...")
 chatter = ChatterModule(examples=training_examples)
 logger.info("ChatterModule loaded")
-# Uncomment to evaluate the ChatterModule as a whole using the examples provided
-# logger.info("Evaluating ChatterModule...")
-# logger.info(chatter.evaluate())
+if EVAL_MODE:
+    logger.info("Evaluating ChatterModule...")
+    logger.info(f"ChatterModule evaluation results: {chatter.evaluate()}")
 user_chat_history = ChatHistory()
 while True:
     # Get user input
@@ -54,7 +63,10 @@ while True:
             image_base64=image_base64,
         ), )
 
+    logger.debug(f"Last 2 prompts: {lm.inspect_history(n=2)}")
+
     # Send request to endpoint
+    print("Generating response...")
     response = chatter(chat_history=user_chat_history).response
 
     # Append response to chat history
@@ -67,11 +79,4 @@ while True:
     # Print response
     print()
     print("Creator: ", response)
-    # print("<Debug>")
-    # print("Evaluation:", chatter.evaluate())
-    # print(
-    #     "Prompt:", lm.inspect_history(n=2)
-    # )  # outside the optimizer we send two messages at a time (1 for the
-    # response and another for the content filter)
-    # print("</Debug>")
     print()
