@@ -13,7 +13,7 @@ class KNNOptimizer():
         self,
         examples: list[LabeledChatHistory],
         # K of 1 makes sense for matching exact responses but there might be higher values that make sense
-        k: int = 1):
+        k: int = 3):
         super().__init__()
         self.labeled_examples = examples
         self.dspy_examples = [
@@ -49,4 +49,4 @@ class KNNOptimizer():
     def answer_similarity_match(example: Example, pred, trace: object = None):
         assert (type(example.response) is str)
         f1 = dsp.F1(pred.response, [example.response])
-        return f1 >= 0.05  # TODO: Make this a parameter and verify that this is a good threshold
+        return f1 >= 0.1  # TODO: Make this a parameter and verify that this is a good threshold

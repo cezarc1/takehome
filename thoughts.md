@@ -20,6 +20,15 @@ This chatbot as it stands is pretty basic. For one, we want it to sound more lik
 
     > I got this working. Vibe check is ok. Ideally we would want to verify by using a validation set. I am concerned that the KNN optimizer might be matching similarity based on the output response and not the input. Ideally I would like to debug this or as said above validate it but well see.... I am NOT sure that this is doing it correctly.
 
+    > Future improvements: We could sample sub-sequences of the chat history to see if that helps.
+    > Eval: we should evaluate the responses based on a couple more metrics (style, topic, etc.)
+    >
+    > Some basic eval runs:
+    > knn optimizer: k = 1, f1 >= 0.1" :dspy.evaluate.evaluate: Average Metric: 3 / 10 (30.0%)
+    > knn optimizer: k = 1, f1 >= 0.05" : dspy.evaluate.evaluate: Average Metric: 6/ 10 (60.0%)
+    > knn optimizer: k = 3, f1 >= 0.05" :dspy.evaluate.evaluate: Average Metric: 8 / 10 (80.0%)
+    > knn optimizer: k = 3, f1 >= 0.1" :dspy.evaluate.evaluate: Average Metric: 5 / 10 (50.0%)
+
 2. **Incorporate Context Awareness**  
    Introduce context awareness in a way that makes the chatbot more responsive to the timing and circumstances of each interaction. Examples might include awareness of the current time or the duration of a conversation.
 
