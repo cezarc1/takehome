@@ -15,6 +15,16 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "preLaunchTask": "poetry-run"
+        },
+        {
+            "name": "Python: Attach to Jupyter",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "justMyCode": false
         }
     ]
 }
