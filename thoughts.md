@@ -29,6 +29,7 @@ This chatbot as it stands is pretty basic. For one, we want it to sound more lik
     > knn optimizer: k = 3, f1 >= 0.05" :dspy.evaluate.evaluate: Average Metric: 8 / 10 (80.0%)
     > knn optimizer: k = 3, f1 >= 0.1" :dspy.evaluate.evaluate: Average Metric: 5 / 10 (50.0%)
     > knn optimizer: k = 5, f1 >= 0.1" :dspy.evaluate.evaluate: Average Metric: 6 / 10 (60.0%)
+    > knn optimizer: k = 5, f1 >= 0.05" :dspy.evaluate.evaluate: Average Metric: 10 / 10 (100.0%)
 
 2. **Incorporate Context Awareness**  
    Introduce context awareness in a way that makes the chatbot more responsive to the timing and circumstances of each interaction. Examples might include awareness of the current time or the duration of a conversation.

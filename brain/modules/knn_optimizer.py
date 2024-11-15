@@ -9,7 +9,7 @@ import dsp
 
 class KNNOptimizer():
 
-    def __init__(self, examples: list[LabeledChatHistory], k: int = 3):
+    def __init__(self, examples: list[LabeledChatHistory], k: int = 5):
         super().__init__()
         self.labeled_examples = examples
         self.dspy_examples = [
@@ -32,17 +32,21 @@ class KNNOptimizer():
             f"Evaluating KNN module with {len(self.dspy_examples)} training examples on {str(module)}..."
         )
 
-        evaluate_on_examples = Evaluate(devset=self.dspy_examples,
-                                        num_threads=1,
-                                        display_progress=True,
-                                        display_table=True,
-                                        provide_traceback=False,
-                                        return_outputs=False,
-                                        metric=self.answer_similarity_match)
+        evaluate_on_examples = Evaluate(
+            devset=self.dspy_examples,
+            num_threads=1,
+            display_progress=True,
+            display_table=True,
+            provide_traceback=False,
+            return_outputs=False,
+            # TODO: measure using vector similarity also
+            metric=self.answer_similarity_match_f1)
         return evaluate_on_examples(module)
 
     @staticmethod
-    def answer_similarity_match(example: Example, pred, trace: object = None):
+    def answer_similarity_match_f1(example: Example,
+                                   pred,
+                                   trace: object = None):
         assert (type(example.response) is str)
         f1 = dsp.F1(pred.response, [example.response])
         return f1 >= 0.05
