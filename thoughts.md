@@ -22,7 +22,7 @@ I got this working. Vibe check is ok. Ideally we would want to verify by using a
 Future improvements: We could sample sub-sequences of the chat history to see if that helps.
 Eval: we should evaluate the responses based on a couple more metrics (style, topic, etc.)
 
-Using F1 (bag of words) as bootstrap metric:
+Using F1 (bag of words) as bootstrap metric on `Llama-3.2-90B-Vision-Instruct-Turbo`:
 
 | k | f1 threshold | Average Metric |
 |---|-------------|----------------|
@@ -43,7 +43,9 @@ Using Vector similarity as bootstrap metric:
 
 In the end, I went with the F1 metric as the bootstrap metric, with the following parameters: k = 1, f1 >= 0.05, vec_sim >= 0.4.
 
-Best eval run using these parameters: {'avg_f1_score': 0.35259999999999997, 'avg_vector_similarity_score': 0.5638000000000001}
+Best eval run on `Llama-3.2-90B-Vision-Instruct-Turbo` using these parameters was: {'avg_f1_score': 0.35259999999999997, 'avg_vector_similarity_score': 0.5638000000000001}
+
+Also, worth noting that the best eval run on `Meta-Llama-3.1-405B-Instruct-Turbo` using these parameters was: {'avg_f1_score': 0.10980000000000001, 'avg_vector_similarity_score': 0.4172}
 
 > 2. **Incorporate Context Awareness**  
 >    Introduce context awareness in a way that makes the chatbot more responsive to the timing and circumstances of each interaction. Examples might include awareness of the current time or the duration of a conversation.
