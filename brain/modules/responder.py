@@ -9,7 +9,8 @@ class ResponderModule(Module):
         super().__init__()
         reasoning = OutputField(
             prefix=
-            "Reasoning: Let's think step by step to decide on our message.", )
+            "Reasoning: Let's think step by step to decide on our message. We will use the previous chat history to help guide our response and stay within the same voice as previous.",
+        )
         self.prog = TypedChainOfThought(Responder, reasoning=reasoning)
 
     def forward(

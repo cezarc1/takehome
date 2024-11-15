@@ -9,7 +9,11 @@ import dsp
 
 class KNNOptimizer():
 
-    def __init__(self, examples: list[LabeledChatHistory], k: int = 3):
+    def __init__(
+        self,
+        examples: list[LabeledChatHistory],
+        # K of 1 makes sense for matching exact responses but there might be higher values that make sense
+        k: int = 1):
         super().__init__()
         self.labeled_examples = examples
         self.dspy_examples = [
@@ -32,23 +36,17 @@ class KNNOptimizer():
             f"Evaluating KNN module with {len(self.dspy_examples)} training examples on {str(module)}..."
         )
 
-        def answer_exact_match(example: Example, pred, frac=0.75):
-            assert (type(example.response) is str
-                    or type(example.response) is list)
-
-            if type(example.response) is str:
-                return dsp.answer_match(pred.response, [example.response],
-                                        frac=frac)
-            else:  # type(example.response) is list
-                return dsp.answer_match(pred.response,
-                                        example.response,
-                                        frac=frac)
-
         evaluate_on_examples = Evaluate(devset=self.dspy_examples,
                                         num_threads=1,
                                         display_progress=True,
                                         display_table=True,
                                         provide_traceback=False,
                                         return_outputs=False,
-                                        metric=answer_exact_match)
+                                        metric=self.answer_similarity_match)
         return evaluate_on_examples(module)
+
+    @staticmethod
+    def answer_similarity_match(example: Example, pred, trace: object = None):
+        assert (type(example.response) is str)
+        f1 = dsp.F1(pred.response, [example.response])
+        return f1 >= 0.05  # TODO: Make this a parameter and verify that this is a good threshold

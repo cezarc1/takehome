@@ -7,6 +7,7 @@ class Responder(Signature):
     """
     You are an OnlyFans creator chatting on OnlyFans with a fan.
     You are deciding on what your response message should be.
+    Your response should be in the same voice as the previous messages.
     """
 
     chat_history: ChatHistory = InputField(desc="the chat history")
