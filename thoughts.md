@@ -23,13 +23,30 @@ This chatbot as it stands is pretty basic. For one, we want it to sound more lik
     > Future improvements: We could sample sub-sequences of the chat history to see if that helps.
     > Eval: we should evaluate the responses based on a couple more metrics (style, topic, etc.)
     >
-    > Some basic eval runs:
-    > knn optimizer: k = 1, f1 >= 0.1" :dspy.evaluate.evaluate: Average Metric: 3 / 10 (30.0%)
-    > knn optimizer: k = 1, f1 >= 0.05" : dspy.evaluate.evaluate: Average Metric: 6/ 10 (60.0%)
-    > knn optimizer: k = 3, f1 >= 0.05" :dspy.evaluate.evaluate: Average Metric: 8 / 10 (80.0%)
-    > knn optimizer: k = 3, f1 >= 0.1" :dspy.evaluate.evaluate: Average Metric: 5 / 10 (50.0%)
-    > knn optimizer: k = 5, f1 >= 0.1" :dspy.evaluate.evaluate: Average Metric: 6 / 10 (60.0%)
-    > knn optimizer: k = 5, f1 >= 0.05" :dspy.evaluate.evaluate: Average Metric: 10 / 10 (100.0%)
+    > Using F1 (bag of words) as bootstrap metric::
+   >
+   > | k | f1 threshold | Average Metric |
+   > |---|-------------|----------------|
+   > | 1 | >= 0.10 | 3/10 (30.0%) |
+   > | 1 | >= 0.05 | 6/10 (60.0%) |
+   > | 3 | >= 0.05 | 8/10 (80.0%) |
+   > | 3 | >= 0.10 | 5/10 (50.0%) |
+   > | 5 | >= 0.10 | 6/10 (60.0%) |
+   > | 5 | >= 0.05 | 10/10 (100.0%) |
+
+    > Using Vector similarity as bootstrap metric:
+   > Using Vector similarity as bootstrap metric:
+   >
+   > | k | vector similarity threshold | Average Metric |
+   > |---|---------------------------|----------------|
+   > | 5 | >= 0.4 | 4.435821399092674 / 10 (44.4%) |
+   > | 1 | >= 0.4 | 4.760176405310631 / 10 (47.6%) |
+   > | 1 | >= 0.3 | 4.4036207646131516 / 10 (44.0%) |
+
+   > In the end, I went with the F1 metric as the bootstrap metric,
+   > with the following parameters: k = 1, f1 >= 0.05, vec_sim >= 0.4.
+
+   > Final parameters: {'avg_f1_score': 0.1714, 'avg_vector_similarity_score': 0.46659999999999996}
 
 2. **Incorporate Context Awareness**  
    Introduce context awareness in a way that makes the chatbot more responsive to the timing and circumstances of each interaction. Examples might include awareness of the current time or the duration of a conversation.

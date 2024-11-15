@@ -32,6 +32,7 @@ logger.info(f"Loaded {len(training_examples)} training examples")
 logger.info("Loading ChatterModule...")
 chatter = ChatterModule(examples=training_examples)
 logger.info("ChatterModule loaded")
+# Uncomment to evaluate the ChatterModule as a whole using the examples provided
 # logger.info("Evaluating ChatterModule...")
 # logger.info(chatter.evaluate())
 user_chat_history = ChatHistory()
