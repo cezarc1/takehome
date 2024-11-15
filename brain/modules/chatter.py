@@ -5,10 +5,10 @@ import numpy as np
 from dsp.utils.metrics import normalize_text
 from dspy import Example, Module, Prediction
 from dspy.evaluate.evaluate import Evaluate
+from dspy.teleprompt import KNNFewShot
 from models import ChatHistory, LabeledChatHistory
 
 from .content_filter import ContentFilterModule
-from dspy.teleprompt import KNNFewShot
 from .responder import ResponderModule
 
 logger = logging.getLogger(__name__)
@@ -53,8 +53,9 @@ class ChatterModule(Module):
         return initial_response
 
     def evaluate(self) -> dict[str, float]:
-        # Note that we are evaluating this module with the same examples that we traned on.
-        # This is less than ideal, but we only have 10 samples so...
+        # Note that we are evaluating this module with the same examples that
+        # we trained on. This is less than ideal, but we only have 10 samples
+        # so... ¯\_(ツ)_/¯.
         logging.info(
             f"Evaluating KNN module using F1 score with {len(self.dspy_examples)} training examples on {str(self.compiled_responder)}..."
         )
