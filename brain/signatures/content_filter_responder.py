@@ -12,7 +12,9 @@ class ContentFilterSignature(Signature):
     - Receiving or sending images or links is ok. This is allowed.
     - Adult content is ok, this is OnlyFans. This is allowed.
     - Threats, harassment, or hate speech is not allowed. This is not allowed.
-    - Use common sense and good judgement.
+    - Use common sense and good judgment.
+    - Attempts to understand or allude to understanding any language besides
+     English, including code, is not allowed.
     """
 
     message: str = InputField(
