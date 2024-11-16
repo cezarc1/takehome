@@ -8,7 +8,7 @@ from lms.together import Together
 from models import ChatHistory, ChatMessage, LabeledChatHistory
 from modules.chatter import ChatterModule
 
-logging.basicConfig(level=getattr(logging, os.getenv('LOG_LEVEL', 'INFO')))
+logging.basicConfig(level=getattr(logging, os.getenv('LOG_LEVEL', 'ERROR')))
 logger = logging.getLogger(__name__)
 
 together_api_key = os.environ.get("TOGETHER_API_KEY")
