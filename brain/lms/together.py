@@ -42,14 +42,10 @@ class Together(HFModel):
         max_time=settings.backoff_time,
         on_backoff=backoff_hdlr,
     )
-    def _generate(self,
-                  prompt,
-                  use_chat_api=False,
-                  image_base64=None,
-                  **kwargs):
+    def _generate(self, prompt, **kwargs):
         kwargs = {**self.kwargs, **kwargs}
-        # stop = kwargs.get("stop")
-        logger.debug(f"Calling Together with prompt: {prompt}")
+        logger.debug(
+            f"Calling Together with prompt: {prompt} and kwargs: {kwargs}")
         try:
             response = self.client.completions.create(
                 prompt=prompt,

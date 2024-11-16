@@ -1,3 +1,5 @@
+from typing import Optional
+
 from dspy import Module, OutputField, TypedChainOfThought
 from models import ChatHistory
 from signatures.responder import Responder
@@ -23,5 +25,6 @@ class ResponderModule(Module):
     def forward(
         self,
         chat_history: ChatHistory,
+        img_base64: Optional[str] = None,
     ):
-        return self.prog(chat_history=chat_history)
+        return self.prog(chat_history=chat_history, img_base64=img_base64)

@@ -31,7 +31,6 @@ lm = Together(
     stop=[
         "<|eot_id|>", "<|eom_id|>", "\n\n---\n\n", "\n\n---", "---", "\n---"
     ],
-    # stop=["\n", "\n\n"],
 )
 
 settings.configure(lm=lm)
@@ -60,14 +59,18 @@ while True:
             from_creator=False,
             content=user_input,
             timestamp=datetime.now(),
-            image_base64=image_base64,
+            image_base64=
+            image_base64,  # we only add the image here for bookkeeping
         ), )
 
     logger.debug(f"Last 2 prompts: {lm.inspect_history(n=2)}")
 
     # Send request to endpoint
     print("Generating response...")
-    response = chatter(chat_history=user_chat_history).response
+    response = chatter(
+        chat_history=user_chat_history,
+        img_base64=image_base64,
+    ).response
 
     # Append response to chat history
     user_chat_history.messages.append(

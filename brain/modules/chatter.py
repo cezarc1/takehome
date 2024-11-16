@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 import dsp
 import numpy as np
@@ -44,8 +45,12 @@ class ChatterModule(Module):
     def forward(
         self,
         chat_history: ChatHistory,
+        img_base64: Optional[str] = None,
     ):
-        initial_response = self.compiled_responder(chat_history=chat_history)
+        initial_response = self.compiled_responder(
+            chat_history=chat_history,
+            img_base64=img_base64,
+        )
         if self.content_filter:
             filtered = self.content_filter(message=initial_response.response)
             if not filtered.is_safe:

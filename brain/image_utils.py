@@ -1,10 +1,13 @@
 import base64
+import logging
 import re
 from io import BytesIO
 from typing import Optional
 
 import requests
 from PIL import Image
+
+logger = logging.getLogger(__name__)
 
 
 def extract_image_from_text(text: str) -> Optional[str]:
@@ -19,16 +22,18 @@ def extract_image_from_text(text: str) -> Optional[str]:
     """
     if "http" not in text:
         return None
-
-    url_match = re.search(r"http[^\s]+", text)
-    if not url_match:
+    try:
+        url_match = re.search(r"http[^\s]+", text)
+        if not url_match:
+            return None
+        image_url = url_match.group(0)
+        image = fetch_image_from_url(image_url)
+        image_format = image_url.split(".")[-1]
+        image_b64 = image_to_base64(image, image_format)
+        return image_b64
+    except Exception as e:
+        logger.error(f"Error extracting image from text: {e}")
         return None
-
-    image_url = url_match.group(0)
-    image = fetch_image_from_url(image_url)
-    image_format = image_url.split(".")[-1]
-    image_b64 = image_to_base64(image, image_format)
-    return image_b64
 
 
 def fetch_image_from_url(url: str) -> Image.Image:
