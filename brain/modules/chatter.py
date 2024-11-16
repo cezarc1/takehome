@@ -49,6 +49,10 @@ class ChatterModule(Module):
         if self.content_filter:
             filtered = self.content_filter(message=initial_response.response)
             if not filtered.is_safe:
+                logger.warning(
+                    f"Message detected as NOT SAFE: {initial_response.response}.\n"
+                    f"REASON: {filtered.reasoning}\n"
+                    f"new filtered message: {filtered.filtered_message}.")
                 return Prediction(response=filtered.filtered_message)
         return initial_response
 

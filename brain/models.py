@@ -31,7 +31,7 @@ class ChatHistory(BaseModel):
             time_gap = self.get_time_gap_message(previous_message_timestamp,
                                                  message)
             if time_gap:
-                messages.append(time_gap + ":" + message_str)
+                messages.append(time_gap + " : " + message_str)
             else:
                 messages.append(message_str)
             previous_message_timestamp = message.timestamp
@@ -39,16 +39,15 @@ class ChatHistory(BaseModel):
 
     def get_time_gap_message(self,
                              previous_message_timestamp: Optional[datetime],
-                             current_message: ChatMessage) -> str:
+                             current_message: ChatMessage) -> Optional[str]:
         if not previous_message_timestamp or not current_message.timestamp:
-            return ""
-
+            return None
         time_gap = self._format_time_gap(previous_message_timestamp,
                                          current_message.timestamp)
         if current_message.from_creator:
             message = f"sent by YOU {time_gap}"
         else:
-            message = f"sent by FAN {time_gap}"
+            message = f"sent by THE FAN {time_gap}"
         return message
 
     def _format_time_gap(self, prev_time: datetime,
@@ -63,17 +62,16 @@ class ChatHistory(BaseModel):
         """
 
         time_gap = current_time - prev_time
-
         if time_gap.days > 0:
-            return f"[{time_gap.days} days later]\n"
+            return f"{time_gap.days} days later"
         elif time_gap.seconds > 3600:
             hours = time_gap.seconds // 3600
-            return f"{hours} hours later\n"
+            return f"{hours} hours later"
         elif time_gap.seconds > 300:  # 5 minutes
             minutes = time_gap.seconds // 60
-            return f"{minutes} minutes later\n"
+            return f"{minutes} minutes later"
         elif time_gap.seconds > 10:  # 10 seconds
-            return f"{time_gap.seconds} seconds later\n"
+            return f"{time_gap.seconds} seconds later"
         return "a few seconds later"
 
     def model_dump_json(self, **kwargs):
