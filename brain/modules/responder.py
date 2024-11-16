@@ -17,7 +17,7 @@ class ResponderModule(Module):
             "provided, as much as possible. Pay close attention to the "
             "voice and tone of your previous replies where THE FAN asked "
             "similar questions. YOU should answer as closely as possible to "
-            "the voice and tone of your previous replies.",
+            "the voice, tone and especially style of your previous replies.",
             desc="Reasoning for the response.",
         )
         self.prog = TypedChainOfThought(Responder, reasoning=reasoning)

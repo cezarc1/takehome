@@ -33,7 +33,7 @@ Eval using the same 10 samples that we used for training. Using F1 (bag of words
 | 5 | >= 0.10 | 6/10 (60.0%) |
 | 5 | >= 0.05 | 10/10 (100.0%) |
 
-Using Vector similarity as bootstrap metric:
+Using Vector similarity as bootstrap metric, using  from [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2):
 
 | k | vector similarity threshold | Average Metric |
 |---|---------------------------|----------------|
@@ -47,6 +47,22 @@ Best eval run on `Llama-3.2-90B-Vision-Instruct-Turbo` using these parameters wa
 
 Also, worth noting that the best eval run on `Meta-Llama-3.1-405B-Instruct-Turbo` using these parameters was: {'avg_f1_score': 0.10980000000000001, 'avg_vector_similarity_score': 0.4172}
 
+Switched to using [StyleDistance/styledistance](https://huggingface.co/StyleDistance/styledistance) as the embedding model for calculating vector similarity, using `Llama-3.2-90B-Vision-Instruct-Turbo`:
+
+Using StyleDistance/styledistance as embedding model with `Llama-3.2-90B-Vision-Instruct-Turbo` as the llm model:
+
+| k | bootstrap_max_rounds | thresholds | F1 Score | Vector Similarity |
+|---|---------------------|------------|----------|------------------|
+| 1 | 1 | vec_sim >= 0.4, f1 > 0.05 | 0.0640 | 0.8644 |
+| 2 | 1 | vec_sim >= 0.4, f1 > 0.05 | 0.0973 | 0.8883 |
+| 3 | 1 | vec_sim >= 0.4, f1 > 0.05 | 0.0561 | 0.8738 |
+| 6 | 1 | vec_sim >= 0.4, f1 > 0.05 | 0.0862 | 0.8652 |
+| 3 | 3 | vec_sim >= 0.4, f1 > 0.05 | 0.0593 | 0.8984 |
+
+****🔧 Final Configuration:****
+
+I ended up using the `vec_sim` metric for bootstrap metric, with the following parameters: `k = 3`, `vec_sim >= 0.4`, `f1 > 0.05`.
+>
 > 2. **Incorporate Context Awareness**  
 >    Introduce context awareness in a way that makes the chatbot more responsive to the timing and circumstances of each interaction. Examples might include awareness of the current time or the duration of a conversation.
 

@@ -26,10 +26,11 @@ class ChatterModule(Module):
             example.to_dspy_example() for example in self.examples
         ]
         self.vectorizer = dsp.SentenceTransformersVectorizer(
+            model_name_or_path="StyleDistance/styledistance",
             normalize_embeddings=True)
         self.optimizer = KNNFewShot(
-            k=1,
-            max_rounds=1,
+            k=3,
+            max_rounds=3,
             trainset=self.
             dspy_examples,  # type: ignore KNNFewShot uses dsp.Example... instead of dspy.Example. Why?!
             vectorizer=self.vectorizer,
