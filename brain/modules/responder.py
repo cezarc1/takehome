@@ -11,13 +11,13 @@ class ResponderModule(Module):
         super().__init__()
         reasoning = OutputField(
             prefix=
-            "Reasoning: Let's think step by step to decide on our message. "
-            "Use the previous chat history to help guide our response and "
-            "stay within the same voice and tone as previous chat histories "
-            "provided, as much as possible. Pay close attention to the "
-            "voice and tone of your previous replies where THE FAN asked "
-            "similar questions. YOU should answer as closely as possible to "
-            "the voice, tone and especially style of your previous replies.",
+            "Reasoning: Let's think step by step to decide on your message. "
+            "Use the previous chat history to help guide your response and "
+            "stay within the same voice, tone, language, length and especially "
+            "style as previous chat histories, if provided. Only use the 1st "
+            "person and never include any other details, including your "
+            "thoughts, reasoning, etc when writing your response back to the "
+            "fan.",
             desc="Reasoning for the response.",
         )
         self.prog = TypedChainOfThought(Responder, reasoning=reasoning)
