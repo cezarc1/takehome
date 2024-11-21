@@ -56,6 +56,7 @@ class Together(HFModel):
                 top_k=kwargs.get("top_k"),
                 repetition_penalty=kwargs.get("repetition_penalty"),
                 stop=kwargs.get("stop"),
+                seed=kwargs.get("seed"),
                 image_base64=kwargs.get("image_base64"),
                 stream=False,
             )

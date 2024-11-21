@@ -27,6 +27,7 @@ lm = Together(
     max_tokens=1000,
     top_p=0.7,
     top_k=50,
+    seed=42,
     repetition_penalty=1.2,
     stop=[
         "<|eot_id|>", "<|eom_id|>", "\n\n---\n\n", "\n\n---", "---", "\n---"
@@ -39,6 +40,7 @@ training_examples = LabeledChatHistory.load_labeled_histories()
 logger.info(f"Loaded {len(training_examples)} training examples")
 logger.info("Loading ChatterModule...")
 chatter = ChatterModule(examples=training_examples)
+chatter.compile()
 logger.info("ChatterModule loaded")
 if EVAL_MODE:
     logger.info("Evaluating ChatterModule...")

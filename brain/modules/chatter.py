@@ -36,19 +36,22 @@ class ChatterModule(Module):
             vectorizer=self.vectorizer,
             metric=self.get_similarity_match_vector_metric(self.vectorizer),
         )
-        logging.info(
-            f"Compiling ResponderModule with KNNFewShot optimizer using {len(self.dspy_examples)} training examples."
-        )
-        self.compiled_responder = self.optimizer.compile(ResponderModule())
+        self.responder = ResponderModule()
         if use_filter:
             self.content_filter = ContentFilterModule()
+
+    def compile(self):
+        logging.info(
+            f"Compiling ResponderModule with KNNFewShot optimizer using "
+            f"{len(self.dspy_examples)} training examples.")
+        self.responder = self.optimizer.compile(self.responder)
 
     def forward(
         self,
         chat_history: ChatHistory,
         img_base64: Optional[str] = None,
     ):
-        initial_response = self.compiled_responder(
+        initial_response = self.responder(
             chat_history=chat_history,
             img_base64=img_base64,
         )
@@ -67,22 +70,22 @@ class ChatterModule(Module):
         # we trained on. This is less than ideal, but we only have 10 samples
         # so... ¯\_(ツ)_/¯.
         logging.info(
-            f"Evaluating KNN module using F1 score with {len(self.dspy_examples)} training examples on {str(self.compiled_responder)}..."
+            f"Evaluating KNN module using F1 score with {len(self.dspy_examples)} training examples on {str(self.responder)}..."
         )
         f1_eval = Evaluate(devset=self.dspy_examples,
                            num_threads=5,
                            metric=self.similarity_match_f1_metric)
-        f1_eval_score: float = f1_eval(self.compiled_responder)  # type: ignore
+        f1_eval_score: float = f1_eval(self.responder)  # type: ignore
 
         logging.info(
-            f"Evaluating KNN module using vector similarity with {len(self.dspy_examples)} training examples on {str(self.compiled_responder)}..."
+            f"Evaluating KNN module using vector similarity with {len(self.dspy_examples)} training examples on {str(self.responder)}..."
         )
         vector_sim_eval = Evaluate(
             devset=self.dspy_examples,
             num_threads=5,
             metric=self.get_similarity_match_vector_metric(self.vectorizer))
         vector_eval_score: float = vector_sim_eval(
-            self.compiled_responder)  # type: ignore
+            self.responder)  # type: ignore
         return {
             "avg_f1_score": f1_eval_score / 100.0,
             "avg_vector_similarity_score": vector_eval_score / 100.0
@@ -114,6 +117,30 @@ class ChatterModule(Module):
                 # determine if the pred is a good match
                 return score.item(
                 ) >= 0.4  # TODO: determine if this is a good threshold
+
+        def answer_similarity_vector_f1(self,
+                                        example: Example,
+                                        pred: Prediction,
+                                        trace: object = None):
+            """
+            Hybrid metric combining F1 score and vector similarity.
+            Uses existing metrics with weighted average.
+            """
+            # Get F1 score using existing metric
+            f1_score = self.similarity_match_f1_metric(example, pred, trace)
+
+            # Get vector similarity score using existing metric
+            vec_sim_score = self.get_similarity_match_vector_metric(
+                self.vectorizer)(example, pred, trace)
+
+            # Combine scores with weights
+            f1_weight = 0.3
+            vec_sim_weight = 0.7
+
+            hybrid_score = (f1_score * f1_weight) + (vec_sim_score *
+                                                     vec_sim_weight)
+
+            return hybrid_score
 
         return answer_similarity_match_vector
 
