@@ -39,7 +39,7 @@ settings.configure(lm=lm)
 training_examples = LabeledChatHistory.load_labeled_histories()
 logger.info(f"Loaded {len(training_examples)} training examples")
 logger.info("Loading ChatterModule...")
-chatter = ChatterModule(examples=training_examples)
+chatter = ChatterModule(examples=training_examples, use_filter=False)
 chatter.compile()
 logger.info("ChatterModule loaded")
 if EVAL_MODE:
